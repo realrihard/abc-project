@@ -98,8 +98,6 @@ export default {
 };
 </script>
 
-
-
 <style lang="scss" scoped>
 .result {
     &__wrapper {

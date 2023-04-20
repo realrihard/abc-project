@@ -31,7 +31,7 @@ export default {
         }
 
         const imagePath = computed(() => {
-            return 'src/assets/' + route.meta.headerImage
+            return '../assets/' + route.meta.headerImage
         })
 
         return {

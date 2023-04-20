@@ -37,7 +37,7 @@ export default {
         })
 
         const imagePath = computed(() => {
-            return 'src/assets/' + props.questionData.image
+            return '../assets/' + props.questionData.image
         })
 
         return {
