@@ -2,12 +2,12 @@ import { defineStore } from 'pinia'
 
 export const useStore = defineStore('store', {
     state: () => ({
-        menu: false
+        quizKeys: []
     }),
 
     actions: {
-        showMenu() {
-            this.menu = !this.menu
+        getAnswer(answer) {
+            this.quizKeys.push(answer)
         }
     }
 })

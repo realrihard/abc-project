@@ -5,22 +5,36 @@
             </div>
         </div>
         <ul class="menu__list">
-            <li class="menu__list-item">Главная</li>
-            <li class="menu__list-item">Информация о тесте</li>
-            <li class="menu__list-item">Пройти тест</li>
+            <li class="menu__list-item">
+                <router-link to="/">Главная</router-link>
+            </li>
+            <li class="menu__list-item">
+                <router-link to="/results">Информация о тесте</router-link>
+            </li>
+            <li class="menu__list-item">
+                <router-link to="/quiz">Пройти тест</router-link>
+            </li>
         </ul>
     </div>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
     name: 'AppMenu',
     setup(props, context) {
+        const router = useRouter()
         const handleCloseMenu = () => {
             context.emit('menu', false)
         }
 
+        router.afterEach(() => {
+            handleCloseMenu();
+
+        });
+
         return {
+            router,
             handleCloseMenu
         }
     }
@@ -36,6 +50,7 @@ export default {
     left: 0;
     padding: 20px;
     background-color: #181818;
+    z-index: 10;
 
     &__header {
         display: flex;
@@ -52,15 +67,18 @@ export default {
             font-weight: 300;
             font-size: 16px;
             line-height: 22px;
-            color: #fff;
             text-transform: uppercase;
             padding: 15px 0;
-            transition: color .3s ease-in-out;
-            
-            &:hover {
-                color: #F4CE0C;
-                cursor: pointer;
+
+            a {
+                color: #fff;
+                text-decoration: none;
                 transition: color .3s ease-in-out;
+
+                &:hover {
+                    color: #F4CE0C;
+                    transition: color .3s ease-in-out;
+                }
             }
         }
     }
@@ -71,6 +89,7 @@ export default {
     width: 28px;
     height: 28px;
     display: block;
+    cursor: pointer;
 
     &::after {
         position: absolute;

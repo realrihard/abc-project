@@ -1,0 +1,80 @@
+<template>
+    <div class="quiz__wrapper" v-if="questionData.value">
+            <statusbar  :totalSteps="totalQuestions" :currentStep="currentIndex"/>
+            
+            <q-list v-if="questionData.value.type === 'list'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            <q-lusher v-if="questionData.value.type === 'lusher'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            <q-numbers v-if="questionData.value.type === 'numbers'" :questionData="questionData.value" @get-answer="getAnswer"/>
+    </div>
+
+    <div class="quiz__wrapper" v-if="currentIndex >= totalQuestions ">
+        <statusbar :totalSteps="totalQuestions" :currentStep="currentIndex"/>
+        <q-load />
+    </div>
+</template>
+
+<script>
+import { onMounted, ref, reactive, computed, onUnmounted } from 'vue'
+import quizData from '../data/quiz.json'
+import QList from '../components/quiz/QList.vue'
+import QLusher from '../components/quiz/QLusher.vue'
+import QNumbers from '../components/quiz/QNumbers.vue'
+import Statusbar from '../components/quiz/Statusbar.vue'
+import QLoad from '../components/quiz/QLoad.vue'
+import { useStore } from '../store'
+
+export default {
+    name: 'Quiz',
+    components: {
+        QList,
+        QLusher,
+        QNumbers,
+        Statusbar,
+        QLoad
+    },
+    setup() {
+        const store = useStore()
+        const questionData = reactive({})
+        const currentIndex = ref(0)
+
+        onMounted(() => {
+            loadQuestionData()
+        })
+        onUnmounted(() => {
+            currentIndex.value = 0
+        })
+
+        const totalQuestions = computed(() => {
+            return Object.keys(quizData).length
+        })
+
+        const loadQuestionData = () => {
+            questionData.value = quizData[currentIndex.value]
+        }
+
+        const getAnswer = (data) => {
+            store.getAnswer(data)
+            currentIndex.value++
+            loadQuestionData(currentIndex.value)
+        }
+
+        return {
+            questionData,
+            totalQuestions,
+            currentIndex,
+            loadQuestionData,
+            getAnswer
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+.quiz {
+    &__wrapper {
+        background: url('../assets/quiz_bg.jpg');
+        background-size: contain;
+        height: calc(100vh - 46px);
+    }
+}
+</style>

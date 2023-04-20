@@ -2,23 +2,25 @@
   <div class="container" :class="showMenu ? 'noscroll' : ''">
     <app-header @menu="handleMenuState"/>
     <app-menu v-show="showMenu" @menu="handleMenuState"/>
-
     <RouterView />
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-import { RouterView } from 'vue-router'
+import { computed, ref } from 'vue'
+import { RouterView, useRoute } from 'vue-router'
 
 export default {
   setup() {
+    const route = useRoute()
     const showMenu = ref(false)
 
     const handleMenuState = (data) => {
       showMenu.value = data
     }
+
     return {
+      route,
       showMenu,
       handleMenuState
     }
@@ -27,7 +29,9 @@ export default {
 </script>
 
 <style lang="scss">
-div {
+@import 'normalize.css';
+
+div, span {
   box-sizing: border-box;
 }
 .container {
