@@ -1,16 +1,18 @@
 <template>
     <div class="quiz__wrapper" v-if="questionData.value">
             <statusbar  :totalSteps="totalQuestions" :currentStep="currentIndex"/>
-            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
-                <q-list :key="currentIndex" v-if="questionData.value.type === 'list'" :questionData="questionData.value" @get-answer="getAnswer"/>
+
+            <transition name="move" mode="out-in" :leave-active-class="moveLeaveActive" :enter-from-class="moveEnterFrom" :leave-to-class="moveLeaveTo">
+                <div class="quiz__content" :key="currentIndex">
+                    <q-list  v-if="questionData.value.type === 'list'" :questionData="questionData.value" @choose-answer="chooseAnswer"/>
+                    <q-lusher v-if="questionData.value.type === 'lusher'" :questionData="questionData.value" @choose-answer="chooseAnswer"/>
+                    <q-numbers :key="currentIndex" v-if="questionData.value.type === 'numbers'" :questionData="questionData.value" @choose-answer="chooseAnswer"/>
+                </div>
             </transition>
-            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
-                <q-lusher :key="currentIndex" v-if="questionData.value.type === 'lusher'" :questionData="questionData.value" @get-answer="getAnswer"/>
-            </transition>
-            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
-                <q-numbers :key="currentIndex" v-if="questionData.value.type === 'numbers'" :questionData="questionData.value" @get-answer="getAnswer"/>
-            </transition>
-        
+
+            <div class="quiz__next" style="color: #fff">
+                <app-btn btnText="Далее" :btnState="tempAnswer === null" @click="getAnswer"></app-btn>
+            </div>
     </div>
 
     <div class="quiz__wrapper" v-if="currentIndex >= totalQuestions ">
@@ -42,6 +44,7 @@ export default {
         const store = useStore()
         const questionData = reactive({})
         const currentIndex = ref(0)
+        const tempAnswer = ref(null)
 
         onMounted(() => {
             loadQuestionData()
@@ -58,18 +61,28 @@ export default {
             questionData.value = quizData[currentIndex.value]
         }
 
-        const getAnswer = (data) => {
-            store.getAnswer(data)
+        const chooseAnswer = (data) => {
+            tempAnswer.value = data
+        }
+
+        const getAnswer = () => {
+            store.getAnswer(tempAnswer.value)
             currentIndex.value++
             loadQuestionData(currentIndex.value)
+            tempAnswer.value = null
         }
 
         return {
             questionData,
             totalQuestions,
             currentIndex,
+            tempAnswer,
             loadQuestionData,
-            getAnswer
+            chooseAnswer,
+            getAnswer,
+            moveLeaveActive: 'move-leave-active',
+            moveEnterFrom: 'move-enter-from',
+            moveLeaveTo: 'move-leave-to',
         }
     }
 }
@@ -83,17 +96,21 @@ export default {
         height: calc(100vh - 46px);
         overflow: hidden;
     }
+
+    &__next {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
 }
 
 .move-enter-active, .move-leave-active {
-    transition: transform 0.3s;
-  }
-
-  .move-enter-from {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.move-enter-from {
     transform: translateX(100%);
-  }
-  
-  .move-leave-to {
+}
+.move-leave-to {
     transform: translateX(-100%);
-  }
+}
 </style>

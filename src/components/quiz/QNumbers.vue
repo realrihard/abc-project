@@ -4,13 +4,10 @@
         <div class="quiz__block-image"><img :src="imagePath" alt=""></div>
         <div class="quiz__block-numbers">
             <div class="quiz__block-item" v-for="answer in questionData.answer" :key="answer">
-                <input class="num__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer">
+                <input class="num__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer" @change="getAnswer">
                 <label :for="answer.value"><span>{{answer.title}}</span></label>
             </div>
             
-        </div>
-        <div class="quiz__block-next">
-            <app-btn btnText="Далее" :btnState="btnState" @click="getAnswer"></app-btn>
         </div>
     </div>
 </template>
@@ -28,20 +25,14 @@ export default {
         const selectedAnswer = ref(null)
 
         const getAnswer = () => {
-            context.emit('get-answer', selectedAnswer.value)
-            selectedAnswer.value = null
+            context.emit('choose-answer', selectedAnswer.value)
         }
-
-        const btnState = computed(() => {
-            return selectedAnswer.value === null
-        })
 
         const imagePath = computed(() => {
             return '../assets/' + props.questionData.image
         })
 
         return {
-            btnState,
             selectedAnswer,
             getAnswer,
             imagePath
@@ -52,6 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 .quiz__block {
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -86,13 +78,6 @@ export default {
     &-item {
         width: 40px;
         height: 40px;
-    }
-
-    &-next {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px 0;
     }
 }
 

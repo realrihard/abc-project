@@ -3,15 +3,11 @@
         <div class="quiz__block-title">{{questionData.question}}</div>
         <div class="quiz__block-list">
             <div class="quiz__block-btn" v-for="answer in questionData.answer" :key="answer.title">
-                <input class="list__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer">
+                <input class="list__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer" @change="chooseAnswer">
                 <label :for="answer.value">
                     <span><span class="round"></span>{{ answer.title }}</span>
                 </label>
             </div>
-           
-        </div>
-        <div class="quiz__block-next">
-            <app-btn btnText="Далее" :btnState="btnState" @click="getAnswer"></app-btn>
         </div>
     </div>
 </template>
@@ -28,13 +24,8 @@ export default {
     setup(props, context) {
         const selectedAnswer = ref(null)
 
-        onMounted(() => {
-            console.log('getAnswer called');
-        })
-
-        const getAnswer = () => {
-            context.emit('get-answer', selectedAnswer.value)
-            selectedAnswer.value = null
+        const chooseAnswer = () => {
+            context.emit('choose-answer', selectedAnswer.value)
         }
 
         const btnState = computed(() => {
@@ -44,7 +35,7 @@ export default {
         return {
             btnState,
             selectedAnswer,
-            getAnswer
+            chooseAnswer
         }
     },
 }
@@ -52,8 +43,9 @@ export default {
 
 <style lang="scss" scoped>
 .quiz__block {
+    width: 100%;
+    min-width: 320px;
     position: relative;
-    min-height: calc(100vh - 46px);
     display: flex;
     flex-direction: column;
     row-gap: 40px;
@@ -73,13 +65,6 @@ export default {
     &-list {
         display: flex;
         flex-direction: column;
-    }
-
-    &-next {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px 0;
     }
 }
 .list__btn {

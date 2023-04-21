@@ -3,13 +3,9 @@
         <div class="quiz__block-title">{{questionData.question}}</div>
         <div class="quiz__block-grid">
             <div class="quiz__block-btn" v-for="answer in questionData.answer" :key="answer">
-                <input class="lusher__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer">
+                <input class="lusher__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer" @change="getAnswer">
                 <label :for="answer.value"><span :style="{ 'background-color': answer.color }"></span></label>
             </div>
-            
-        </div>
-        <div class="quiz__block-next">
-            <app-btn btnText="Далее" :btnState="btnState" @click="getAnswer"></app-btn>
         </div>
     </div>
 </template>
@@ -27,16 +23,10 @@ export default {
         const selectedAnswer = ref(null)
 
         const getAnswer = () => {
-            context.emit('get-answer', selectedAnswer.value)
-            selectedAnswer.value = null
+            context.emit('choose-answer', selectedAnswer.value)
         }
 
-        const btnState = computed(() => {
-            return selectedAnswer.value === null
-        })
-
         return {
-            btnState,
             selectedAnswer,
             getAnswer
         }
@@ -46,6 +36,7 @@ export default {
 
 <style lang="scss" scoped>
 .quiz__block {
+    width: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -67,13 +58,6 @@ export default {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-    }
-
-    &-next {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        padding: 40px 0;
     }
 }
 
