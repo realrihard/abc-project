@@ -1,10 +1,16 @@
 <template>
     <div class="quiz__wrapper" v-if="questionData.value">
             <statusbar  :totalSteps="totalQuestions" :currentStep="currentIndex"/>
-            
-            <q-list v-if="questionData.value.type === 'list'" :questionData="questionData.value" @get-answer="getAnswer"/>
-            <q-lusher v-if="questionData.value.type === 'lusher'" :questionData="questionData.value" @get-answer="getAnswer"/>
-            <q-numbers v-if="questionData.value.type === 'numbers'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
+                <q-list :key="currentIndex" v-if="questionData.value.type === 'list'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            </transition>
+            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
+                <q-lusher :key="currentIndex" v-if="questionData.value.type === 'lusher'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            </transition>
+            <transition name="move" mode="out-in" v-leave-active-class="move-leave-active" v-enter-from-class="move-enter-from" v-leave-to-class="move-leave-to">
+                <q-numbers :key="currentIndex" v-if="questionData.value.type === 'numbers'" :questionData="questionData.value" @get-answer="getAnswer"/>
+            </transition>
+        
     </div>
 
     <div class="quiz__wrapper" v-if="currentIndex >= totalQuestions ">
@@ -75,6 +81,19 @@ export default {
         background: url('../assets/quiz_bg.jpg');
         background-size: contain;
         height: calc(100vh - 46px);
+        overflow: hidden;
     }
 }
+
+.move-enter-active, .move-leave-active {
+    transition: transform 0.3s;
+  }
+
+  .move-enter-from {
+    transform: translateX(100%);
+  }
+  
+  .move-leave-to {
+    transform: translateX(-100%);
+  }
 </style>

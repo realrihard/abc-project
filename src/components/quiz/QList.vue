@@ -2,7 +2,7 @@
     <div class="quiz__block">
         <div class="quiz__block-title">{{questionData.question}}</div>
         <div class="quiz__block-list">
-            <div class="quiz__block-btn" v-for="answer in questionData.answer" :key="answer">
+            <div class="quiz__block-btn" v-for="answer in questionData.answer" :key="answer.title">
                 <input class="list__btn" type="radio" :id="answer.value" :value="answer.value" v-model="selectedAnswer">
                 <label :for="answer.value">
                     <span><span class="round"></span>{{ answer.title }}</span>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 export default {
     name: 'QList',
     props: {
@@ -27,6 +27,10 @@ export default {
     },
     setup(props, context) {
         const selectedAnswer = ref(null)
+
+        onMounted(() => {
+            console.log('getAnswer called');
+        })
 
         const getAnswer = () => {
             context.emit('get-answer', selectedAnswer.value)
@@ -63,6 +67,7 @@ export default {
         font-size: 20px;
         line-height: 26px;
         text-align: center;
+        padding: 0 30px;
     }
 
     &-list {
@@ -77,7 +82,6 @@ export default {
         padding: 40px 0;
     }
 }
-
 .list__btn {
     display: none;
 
