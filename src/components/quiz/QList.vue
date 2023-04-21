@@ -91,7 +91,7 @@ export default {
         align-items: center;
         width: 100%;
         min-height: 50px;
-        background-color: rgba(256, 256, 256, .5);
+        background-color: rgba(255, 255, 255, .5);
         padding: 10px 35px;
         transition: all .3s ease-in-out;
         cursor: pointer;

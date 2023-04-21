@@ -299,7 +299,7 @@ section {
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
-    color: rgba(256, 256, 256, .5);
+    color: rgba(255, 255, 255, .5);
     text-align: center;
     margin-top: 20px;
 }
